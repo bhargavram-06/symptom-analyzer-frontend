@@ -209,7 +209,10 @@ const Home = () => {
                     <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center p-0.5 shadow-md border border-slate-100 overflow-hidden">
                         <img src="/logo.png" alt="Logo" className="w-full h-full object-contain scale-150" />
                     </div>
-                    <h1 className="text-lg font-black italic tracking-tighter uppercase hidden sm:block">Vital<span className="text-blue-600">Portal</span></h1>
+                    {/* 'hidden sm:block' was hiding it on mobile. We removed it. */}
+                    <h1 className="text-base md:text-lg font-black italic tracking-tighter uppercase">
+                    Vital<span className="text-blue-600">Portal</span>
+                    </h1>
                 </div>
 
                 <div className="flex items-center gap-2 md:gap-4">
