@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion'; 
 import { 
     User, Droplet, Trash2, 
-    FileText, History, ArrowLeft, Camera, Eye, Plus, X, ChevronRight, Activity 
+    FileText, History, ArrowLeft, Camera, Eye, Plus, ChevronRight, Activity 
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -12,12 +12,10 @@ const Profile = () => {
     const navigate = useNavigate();
     const [isEditing, setIsEditing] = useState(false);
     
-    // 1. Initial State Loading
     const [userData, setUserData] = useState(JSON.parse(localStorage.getItem('user')) || {});
     const [history, setHistory] = useState(JSON.parse(localStorage.getItem('medicalHistory')) || []);
     const [docs, setDocs] = useState(JSON.parse(localStorage.getItem('medicalDocs')) || []);
 
-    // --- CRITICAL CLOUD SYNC FUNCTION ---
     const syncWithCloud = async (updatedUser, updatedHistory, updatedDocs) => {
         const token = localStorage.getItem('token');
         try {
@@ -29,23 +27,19 @@ const Profile = () => {
                 height: updatedUser.height,
                 weight: updatedUser.weight,
                 profilePic: updatedUser.profilePic,
-                medicalHistory: updatedHistory, // Sending the full array
-                medicalDocs: updatedDocs       // Sending the full array
+                medicalHistory: updatedHistory,
+                medicalDocs: updatedDocs
             };
-
-            console.log("☁️ Syncing to Cloud:", payload);
 
             const res = await axios.post('https://symptom-analyzer-backend1.onrender.com/api/auth/sync-profile', payload, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
             if (res.data.success) {
-                console.log("✅ Cloud Sync Success");
-                // Update local 'user' object to keep it consistent
                 localStorage.setItem('user', JSON.stringify(res.data.user));
             }
         } catch (err) {
-            console.error("❌ Cloud Sync Error:", err);
+            console.error("Cloud Sync Error:", err);
             toast.error("Cloud backup failed");
         }
     };
@@ -54,7 +48,6 @@ const Profile = () => {
         const file = e.target.files[0];
         if (!file) return;
 
-        // 10MB limit
         if (file.size > 10 * 1024 * 1024) return toast.error("File too large (Max 10MB)");
 
         const reader = new FileReader();
@@ -76,7 +69,6 @@ const Profile = () => {
                 const updatedDocs = [newDoc, ...docs];
                 setDocs(updatedDocs);
                 localStorage.setItem('medicalDocs', JSON.stringify(updatedDocs));
-                // Sync current user, current history, and the NEW docs
                 await syncWithCloud(userData, history, updatedDocs);
                 toast.success("Document Secured in Vault");
             }
@@ -110,15 +102,8 @@ const Profile = () => {
 
     const bmi = (userData.weight / ((userData.height / 100) ** 2)).toFixed(1);
 
-    const getConfidenceColor = (score) => {
-        if (score >= 75) return "text-emerald-400 border-emerald-500/20 bg-emerald-500/5";
-        if (score >= 45) return "text-amber-400 border-amber-500/20 bg-amber-500/5";
-        return "text-rose-400 border-rose-500/20 bg-rose-500/5";
-    };
-
     return (
         <div className="min-h-screen bg-[#020617] text-white pb-20 font-sans">
-            {/* Header */}
             <div className="bg-[#0f172a]/80 backdrop-blur-xl border-b border-white/5 p-6 sticky top-0 z-50 flex justify-between items-center">
                 <button onClick={() => navigate('/home')} className="flex items-center gap-2 text-slate-400 hover:text-white transition-all font-black text-[10px] uppercase tracking-widest">
                     <ArrowLeft size={16}/> Dashboard
@@ -128,8 +113,6 @@ const Profile = () => {
             </div>
 
             <div className="max-w-6xl mx-auto px-6 pt-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
-                {/* LEFT COLUMN: PROFILE DATA */}
                 <div className="lg:col-span-1 space-y-6">
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-[#0f172a] border border-white/5 rounded-[3rem] p-8 text-center shadow-2xl relative">
                         <div className="relative w-32 h-32 mx-auto mb-6 group">
@@ -155,7 +138,6 @@ const Profile = () => {
                         </button>
                     </motion.div>
 
-                    {/* BMI CARD */}
                     <div className="bg-gradient-to-br from-blue-600 to-indigo-900 rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden">
                         <Activity size={40} className="absolute -right-4 -top-4 text-white/10" />
                         <p className="text-[10px] font-black text-blue-200 uppercase tracking-widest mb-2">Health Index</p>
@@ -163,9 +145,7 @@ const Profile = () => {
                     </div>
                 </div>
 
-                {/* RIGHT COLUMN: HISTORY & VAULT */}
                 <div className="lg:col-span-2 space-y-6">
-                    {/* ANALYSIS HISTORY */}
                     <div className="bg-[#0f172a] border border-white/5 rounded-[3rem] p-8 shadow-2xl">
                         <div className="flex justify-between items-center mb-8">
                             <h3 className="flex items-center gap-2 font-black text-[10px] uppercase tracking-[0.3em] text-slate-400">
@@ -193,7 +173,6 @@ const Profile = () => {
                         </div>
                     </div>
 
-                    {/* DIGITAL VAULT */}
                     <div className="bg-[#0f172a] border border-white/5 rounded-[3rem] p-8 shadow-2xl">
                         <div className="flex justify-between items-center mb-8">
                             <h3 className="flex items-center gap-2 font-black text-[10px] uppercase tracking-[0.3em] text-slate-400">
