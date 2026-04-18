@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion'; // Updated to latest framer-motion naming
 import { 
     Search, Activity, User as Loader2, X, LayoutDashboard, 
     Info, LogOut, AlertTriangle, ChevronRight, Sun, Moon, 
@@ -9,7 +9,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { jsPDF } from 'jspdf';
-
+import Chatbot from '../components/Chatbot';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -74,7 +74,6 @@ const Home = () => {
             const processed = symptomInput.split(',').map(s => s.toLowerCase().trim().replace(/ /g, "_")).filter(s => s !== "");
             const { data } = await axios.post('https://symptom-analyzer-backend1.onrender.com/api/symptom/analyze', { symptoms: processed });
 
-            
             const newHistoryItem = { 
                 id: Date.now(), 
                 date: new Date().toLocaleDateString(), 
@@ -86,7 +85,11 @@ const Home = () => {
             const existingHistory = JSON.parse(localStorage.getItem('medicalHistory')) || [];
             localStorage.setItem('medicalHistory', JSON.stringify([newHistoryItem, ...existingHistory]));
             setResult(data);
-        } catch (err) { toast.error("ML Service Offline"); } finally { setLoading(false); }
+        } catch (err) { 
+            toast.error("ML Service Offline"); 
+        } finally { 
+            setLoading(false); 
+        }
     };
 
     const toggleSymptom = (s) => {
@@ -94,7 +97,6 @@ const Home = () => {
         if(current.includes(s)) setSymptomInput(current.filter(x => x !== s).join(', '));
         else setSymptomInput([...current, s].join(', '));
     };
-
 
     const exportPDF = () => {
         if (!result) return;
@@ -165,29 +167,23 @@ const Home = () => {
         doc.save(`${result.disease}_Medical_Report.pdf`);
         toast.success("Professional Report Downloaded");
     };
-    // Add this inside the Home component
+
     const syncChatWithResults = () => {
-    if (!result) return;
+        if (!result) return;
+        const contextMessage = `USER REPORT: I have ${symptomInput}. Prediction: ${result.disease} (${result.confidence}%). Help me verify this.`;
 
-    const contextMessage = `USER REPORT: I have ${symptomInput}. Prediction: ${result.disease} (${result.confidence}%). Help me verify this.`;
-
-    if (window.chatbase) {
-        // Step 1: Open the window
-        window.chatbase("open");
-
-        // Step 2: Wait 500ms for the widget to initialize, then send
-        setTimeout(() => {
-            window.chatbase("send", { message: contextMessage });
-            toast.success("Analyzing context...");
-        }, 500); 
-    } else {
-        navigator.clipboard.writeText(contextMessage);
-        toast.info("Context copied! Paste it in the chat.");
-    }
+        if (window.chatbase) {
+            window.chatbase("open");
+            setTimeout(() => {
+                window.chatbase("send", { message: contextMessage });
+                toast.success("Analyzing context...");
+            }, 500); 
+        } else {
+            navigator.clipboard.writeText(contextMessage);
+            toast.info("Context copied! Paste it in the chat.");
+        }
     };
 
-
-   //confidence level
     const getConfidenceStatus = () => {
         if (!result || result.confidence === undefined) return null;
         if (result.confidence < 45) return { label: `Low Confidence (${result.confidence}%) - AI is uncertain`, color: "rose" };
@@ -202,7 +198,9 @@ const Home = () => {
 
     return (
         <div className={`min-h-screen transition-colors duration-500 ${darkMode ? 'bg-[#020617] text-white' : 'bg-[#f8fafc] text-slate-900'} pb-20 font-sans relative overflow-x-hidden`}>
-            
+            {/* INJECT CHATBOT HERE - ONLY ON HOME */}
+            <Chatbot />
+
             {/* --- HEADER --- */}
             <motion.nav initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}
                 className={`flex justify-between items-center px-4 md:px-10 py-4 sticky top-0 z-[60] border-b ${darkMode ? 'bg-[#0f172a] border-white/5' : 'bg-white border-slate-200'} shadow-md`}
@@ -377,7 +375,6 @@ const Home = () => {
                                                         <p className="text-xs italic opacity-70">Improve result by adding related symptoms or consulting our bot.</p>
                                                     </div>
                                                 </div>
-                                                
                                             </div>
                                             <div className="flex justify-center sm:justify-end">
                                                 <button 
