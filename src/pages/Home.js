@@ -70,8 +70,8 @@ const Home = () => {
         e.preventDefault();
         if (!symptomInput) return toast.error("Select symptoms first");
         
-        const token = localStorage.getItem('token'); // Fetch token for API auth
-        if (!token) return toast.error("Please login again");
+        const token = localStorage.getItem('token'); 
+        if (!token) return toast.error("Session expired. Please login.");
 
         setLoading(true);
         try {
@@ -91,12 +91,13 @@ const Home = () => {
                 precautions: data.precautions
             };
 
-            // 1. Update Local Storage for Instant UI feedback
             const existingHistory = JSON.parse(localStorage.getItem('medicalHistory')) || [];
             const updatedHistory = [newHistoryItem, ...existingHistory];
+            const currentDocs = JSON.parse(localStorage.getItem('medicalDocs')) || [];
+
             localStorage.setItem('medicalHistory', JSON.stringify(updatedHistory));
 
-            // 2. PERMANENT SAVE: Sync to MongoDB Cloud
+            // PERMANENT SYNC TO MONGODB
             await axios.post('https://symptom-analyzer-backend1.onrender.com/api/auth/sync-profile', {
                 email: userData.email,
                 name: userData.name,
@@ -105,15 +106,14 @@ const Home = () => {
                 height: userData.height,
                 weight: userData.weight,
                 profilePic: userData.profilePic,
-                medicalHistory: updatedHistory, // Syncing the newly updated history
-                medicalDocs: JSON.parse(localStorage.getItem('medicalDocs')) || []
+                medicalHistory: updatedHistory, 
+                medicalDocs: currentDocs 
             });
 
             setResult(data);
-            toast.success("Analysis complete & saved to cloud");
+            toast.success("Analysis complete & synced to cloud");
         } catch (err) { 
-            console.error(err);
-            toast.error("ML Service Offline or Sync Failed"); 
+            toast.error("ML Service Offline or Sync Error"); 
         } finally { 
             setLoading(false); 
         }
@@ -129,93 +129,58 @@ const Home = () => {
         if (!result) return;
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
-
         doc.setFont("helvetica", "bold");
         doc.setFontSize(24);
         doc.setTextColor(37, 99, 235);
         doc.text("VITAL PORTAL", pageWidth / 2, 20, { align: "center" });
-        
         doc.setFontSize(10);
         doc.setTextColor(100);
         doc.text("AI-Powered Medical Analysis Report", pageWidth / 2, 28, { align: "center" });
-        
-        doc.setDrawColor(37, 99, 235);
-        doc.setLineWidth(0.5);
         doc.line(20, 32, pageWidth - 20, 32);
-
         doc.setFontSize(12);
         doc.setTextColor(0, 0, 0);
         doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 45);
         doc.text(`Patient: ${userData.name}`, 20, 52);
-        
-        doc.setFillColor(240, 240, 240);
-        doc.roundedRect(pageWidth - 85, 40, 65, 15, 3, 3, 'F');
         doc.text(`AI Confidence: ${result.confidence}%`, pageWidth - 80, 50);
-
         doc.setFontSize(18);
         doc.setTextColor(37, 99, 235);
         doc.text("DIAGNOSIS:", 20, 70);
         doc.setFontSize(16);
         doc.setTextColor(0, 0, 0);
         doc.text(result.disease.toUpperCase(), 20, 80);
-
         doc.setFontSize(12);
         doc.setFont("helvetica", "bold");
         doc.text("Medical Description:", 20, 95);
         doc.setFont("helvetica", "normal");
         const descLines = doc.splitTextToSize(result.description, pageWidth - 40);
         doc.text(descLines, 20, 102);
-
         const nextY = 102 + (descLines.length * 7);
-
         doc.setFont("helvetica", "bold");
         doc.text("Nutrition Plan:", 20, nextY + 10);
         doc.setFont("helvetica", "normal");
         doc.text(result.diet, 20, nextY + 17);
-
-        doc.setFont("helvetica", "bold");
         doc.text("Medication:", pageWidth / 2, nextY + 10);
-        doc.setFont("helvetica", "normal");
         doc.text(result.medicine, pageWidth / 2, nextY + 17);
-
-        doc.setFont("helvetica", "bold");
-        doc.text("Safety Precautions:", 20, nextY + 35);
-        doc.setFont("helvetica", "normal");
-        result.precautions?.forEach((p, i) => {
-            doc.text(`• ${p}`, 25, nextY + 45 + (i * 7));
-        });
-
-        const footerY = 280;
-        doc.line(20, footerY - 5, pageWidth - 20, footerY - 5);
-        doc.setFontSize(9);
-        doc.setTextColor(150);
-        doc.text("Disclaimer: AI-generated summary. Consult a doctor for professional advice.", pageWidth / 2, footerY, { align: "center" });
-
         doc.save(`${result.disease}_Medical_Report.pdf`);
-        toast.success("Professional Report Downloaded");
     };
 
     const syncChatWithResults = () => {
         if (!result) return;
-        const contextMessage = `USER REPORT: I have ${symptomInput}. Prediction: ${result.disease} (${result.confidence}%). Help me verify this.`;
-
+        const contextMessage = `USER REPORT: I have ${symptomInput}. Prediction: ${result.disease}. Help me verify this.`;
         if (window.chatbase) {
             window.chatbase("open");
-            setTimeout(() => {
-                window.chatbase("send", { message: contextMessage });
-                toast.success("Analyzing context...");
-            }, 500); 
+            setTimeout(() => { window.chatbase("send", { message: contextMessage }); }, 500); 
         } else {
             navigator.clipboard.writeText(contextMessage);
-            toast.info("Context copied! Paste it in the chat.");
+            toast.info("Context copied!");
         }
     };
 
     const getConfidenceStatus = () => {
         if (!result || result.confidence === undefined) return null;
-        if (result.confidence < 45) return { label: `Low Confidence (${result.confidence}%) - AI is uncertain`, color: "rose" };
-        if (result.confidence < 75) return { label: `Moderate Confidence (${result.confidence}%) - Add more details`, color: "amber" };
-        return { label: `High Confidence (${result.confidence}%) - Verified Pattern`, color: "emerald" };
+        if (result.confidence < 45) return { label: `Low Confidence (${result.confidence}%)`, color: "rose" };
+        if (result.confidence < 75) return { label: `Moderate Confidence (${result.confidence}%)`, color: "amber" };
+        return { label: `High Confidence (${result.confidence}%)`, color: "emerald" };
     };
 
     const fadeInUp = {
@@ -225,7 +190,6 @@ const Home = () => {
 
     return (
         <div className={`min-h-screen transition-colors duration-500 ${darkMode ? 'bg-[#020617] text-white' : 'bg-[#f8fafc] text-slate-900'} pb-20 font-sans relative overflow-x-hidden`}>
-            {/* INJECT CHATBOT HERE - ONLY ON HOME */}
             <Chatbot />
 
             {/* --- HEADER --- */}
@@ -393,25 +357,17 @@ const Home = () => {
                                         <p className="text-sm italic leading-relaxed">{result.description}</p>
                                     </div>
 
-                                    {/* REFINEMENT / BOT CTA SECTION */}
                                     {result.confidence < 90 && (
                                         <div className={`p-6 rounded-[2rem] border-2 border-dashed flex flex-col gap-4 text-left ${darkMode ? 'bg-blue-500/5 border-blue-500/20' : 'bg-blue-50 border-blue-200'}`}>
-                                            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg"><MessageSquare size={24}/></div>
-                                                    <div>
-                                                        <p className="font-black text-[10px] uppercase text-blue-600 tracking-tighter">AI Analysis Refinement</p>
-                                                        <p className="text-xs italic opacity-70">Improve result by adding related symptoms or consulting our bot.</p>
-                                                    </div>
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg"><MessageSquare size={24}/></div>
+                                                <div>
+                                                    <p className="font-black text-[10px] uppercase text-blue-600 tracking-tighter">AI Analysis Refinement</p>
+                                                    <p className="text-xs italic opacity-70">Consult our bot for more details.</p>
                                                 </div>
                                             </div>
                                             <div className="flex justify-center sm:justify-end">
-                                                <button 
-                                                    onClick={syncChatWithResults}
-                                                    className="text-[9px] font-black uppercase bg-blue-600 text-white px-4 py-2 rounded-xl animate-bounce hover:bg-blue-700 transition-colors"
-                                                    >
-                                                    Consult Bot ↓
-                                                </button>
+                                                <button onClick={syncChatWithResults} className="text-[9px] font-black uppercase bg-blue-600 text-white px-4 py-2 rounded-xl animate-bounce">Consult Bot ↓</button>
                                             </div>
                                         </div>
                                     )}
@@ -436,7 +392,7 @@ const Home = () => {
                                     </div>
                                     <div className={`p-6 rounded-[2rem] border flex items-center gap-4 ${darkMode ? 'bg-rose-500/10 border-rose-500/20' : 'bg-rose-50 border-rose-100'}`}>
                                         <AlertTriangle className="text-rose-500 shrink-0" size={24} />
-                                        <p className="text-[10px] font-black uppercase tracking-widest leading-relaxed text-left">Consult a healthcare professional if symptoms persist or worsen.</p>
+                                        <p className="text-[10px] font-black uppercase tracking-widest leading-relaxed text-left">Consult a professional if symptoms persist.</p>
                                     </div>
                                 </div>
                                 <button onClick={() => setResult(null)} className={`w-full mt-10 py-5 rounded-3xl font-black uppercase text-xs tracking-widest shadow-xl active:scale-95 transition-all ${darkMode ? 'bg-white text-black' : 'bg-slate-900 text-white'}`}>Dismiss Report</button>

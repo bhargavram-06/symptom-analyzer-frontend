@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-// Removed AnimatePresence as it wasn't being used
 import { motion } from 'framer-motion'; 
 import { 
     User, Droplet, Trash2, 
     FileText, History, ArrowLeft, Camera, Eye, Plus, X, ChevronRight, Activity 
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import toast from 'react-hot-toast';
 
 const Profile = () => {
@@ -24,65 +24,87 @@ const Profile = () => {
     const [history, setHistory] = useState(JSON.parse(localStorage.getItem('medicalHistory')) || []);
     const [docs, setDocs] = useState(JSON.parse(localStorage.getItem('medicalDocs')) || []);
 
-    // Sync state changes to localStorage
-    useEffect(() => {
-        localStorage.setItem('user', JSON.stringify(userData));
-    }, [userData]);
-
-    useEffect(() => {
-        localStorage.setItem('medicalDocs', JSON.stringify(docs));
-    }, [docs]);
-
-    const bmi = (userData.weight / ((userData.height / 100) ** 2)).toFixed(1);
+    // Sync cloud helper function
+    const syncWithCloud = async (updatedUser, updatedHistory, updatedDocs) => {
+        try {
+            await axios.post('https://symptom-analyzer-backend1.onrender.com/api/auth/sync-profile', {
+                email: updatedUser.email,
+                name: updatedUser.name,
+                age: updatedUser.age,
+                bloodGroup: updatedUser.bloodGroup,
+                height: updatedUser.height,
+                weight: updatedUser.weight,
+                profilePic: updatedUser.profilePic,
+                medicalHistory: updatedHistory,
+                medicalDocs: updatedDocs
+            });
+            console.log("Cloud Sync Successful");
+        } catch (err) {
+            toast.error("Cloud Sync Failed");
+        }
+    };
 
     const handleFileUpload = (e, type) => {
         const file = e.target.files[0];
         if (!file) return;
 
-        if (file.size > 1.5 * 1024 * 1024) {
-            return toast.error("File too large. Keep it under 1.5MB.");
+        // Increased limit to 10MB to match server.js updates
+        if (file.size > 10 * 1024 * 1024) {
+            return toast.error("File too large. Keep it under 10MB.");
         }
 
         const reader = new FileReader();
-        reader.onloadend = () => {
+        reader.onloadend = async () => {
             const base64String = reader.result;
             if (type === 'profile') {
-                setUserData(prev => ({ ...prev, profilePic: base64String }));
+                const updatedUser = { ...userData, profilePic: base64String };
+                setUserData(updatedUser);
+                localStorage.setItem('user', JSON.stringify(updatedUser));
+                await syncWithCloud(updatedUser, history, docs);
                 toast.success("Profile photo updated!");
             } else {
                 const newDoc = {
-                    id: Date.now(),
+                    id: Date.now().toString(),
                     name: file.name,
                     date: new Date().toLocaleDateString(),
                     fileData: base64String
                 };
-                setDocs(prev => [newDoc, ...prev]);
+                const updatedDocs = [newDoc, ...docs];
+                setDocs(updatedDocs);
+                localStorage.setItem('medicalDocs', JSON.stringify(updatedDocs));
+                await syncWithCloud(userData, history, updatedDocs);
                 toast.success("Document added to vault!");
             }
         };
         reader.readAsDataURL(file);
     };
 
-    const deleteDoc = (id) => {
-        setDocs(prev => prev.filter(d => d.id !== id));
+    const deleteDoc = async (id) => {
+        const updatedDocs = docs.filter(d => d.id !== id);
+        setDocs(updatedDocs);
+        localStorage.setItem('medicalDocs', JSON.stringify(updatedDocs));
+        await syncWithCloud(userData, history, updatedDocs);
         toast.success("Document deleted");
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         localStorage.setItem('user', JSON.stringify(userData));
+        await syncWithCloud(userData, history, docs);
         setIsEditing(false);
-        toast.success("Health Profile Saved!");
+        toast.success("Health Profile Saved & Synced!");
     };
 
-    const clearHistory = () => {
+    const clearHistory = async () => {
         if(window.confirm("Clear all analysis history?")) {
             setHistory([]);
             localStorage.removeItem('medicalHistory');
+            await syncWithCloud(userData, [], docs);
             toast.success("History cleared");
         }
     };
 
-    // Helper for confidence badge colors
+    const bmi = (userData.weight / ((userData.height / 100) ** 2)).toFixed(1);
+
     const getConfidenceColor = (score) => {
         if (score >= 75) return "text-emerald-400 border-emerald-500/20 bg-emerald-500/5";
         if (score >= 45) return "text-amber-400 border-amber-500/20 bg-amber-500/5";
@@ -102,7 +124,7 @@ const Profile = () => {
 
             <div className="max-w-6xl mx-auto px-6 pt-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
-                {/* --- LEFT: USER DATA & BMI --- */}
+                {/* LEFT: USER DATA */}
                 <div className="lg:col-span-1 space-y-6">
                     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-[#0f172a] border border-white/5 rounded-[3rem] p-8 text-center shadow-2xl relative">
                         <div className="relative w-32 h-32 mx-auto mb-6 group">
@@ -129,11 +151,10 @@ const Profile = () => {
                         </div>
 
                         <button onClick={isEditing ? handleSave : () => setIsEditing(true)} className={`w-full mt-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${isEditing ? 'bg-emerald-600 shadow-emerald-500/20 text-white' : 'bg-white/5 border border-white/10 hover:bg-white/10 shadow-lg'}`}>
-                            {isEditing ? "Save All Changes" : "Edit Health Data"}
+                            {isEditing ? "Save & Sync Cloud" : "Edit Health Data"}
                         </button>
                     </motion.div>
 
-                    {/* BMI CARD */}
                     <div className="bg-gradient-to-br from-blue-600 to-indigo-900 rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden">
                         <Activity size={40} className="absolute -right-4 -top-4 text-white/10" />
                         <p className="text-[10px] font-black text-blue-200 uppercase tracking-widest mb-2">Live BMI Score</p>
@@ -148,10 +169,8 @@ const Profile = () => {
                     </div>
                 </div>
 
-                {/* --- RIGHT: HISTORY & DOCS --- */}
+                {/* RIGHT: HISTORY & DOCS */}
                 <div className="lg:col-span-2 space-y-6">
-                    
-                    {/* MEDICAL HISTORY WITH CONFIDENCE SCORES */}
                     <div className="bg-[#0f172a] border border-white/5 rounded-[3rem] p-8 shadow-2xl">
                         <div className="flex justify-between items-center mb-8">
                             <h3 className="flex items-center gap-2 font-black text-[10px] uppercase tracking-[0.3em] text-slate-400">
@@ -190,7 +209,6 @@ const Profile = () => {
                         </div>
                     </div>
 
-                    {/* DIGITAL VAULT */}
                     <div className="bg-[#0f172a] border border-white/5 rounded-[3rem] p-8 shadow-2xl">
                         <div className="flex justify-between items-center mb-8">
                             <h3 className="flex items-center gap-2 font-black text-[10px] uppercase tracking-[0.3em] text-slate-400">
@@ -201,7 +219,6 @@ const Profile = () => {
                                 <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'doc')} />
                             </label>
                         </div>
-
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {docs.map(doc => (
                                 <div key={doc.id} className="bg-white/5 p-6 rounded-[2.5rem] border border-white/5 group relative hover:border-blue-500/30 transition-all shadow-xl">
@@ -222,11 +239,6 @@ const Profile = () => {
                                     </button>
                                 </div>
                             ))}
-                            {docs.length === 0 && (
-                                <div className="col-span-full text-center py-10 border-2 border-dashed border-white/5 rounded-[2rem]">
-                                    <p className="text-slate-600 font-bold uppercase text-[10px] tracking-widest">Medical documents will appear here</p>
-                                </div>
-                            )}
                         </div>
                     </div>
                 </div>
