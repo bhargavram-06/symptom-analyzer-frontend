@@ -15,7 +15,7 @@ const ResetPassword = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isVerified, setIsVerified] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(35);
+    const [timeLeft, setTimeLeft] = useState(50);
 
     useEffect(() => {
         if (timeLeft > 0 && !isVerified) {
@@ -29,7 +29,7 @@ const ResetPassword = () => {
         try {
             // CHANGE THIS:
             await axios.post('https://symptom-analyzer-backend1.onrender.com/api/auth/forgot-password', { email });
-            setTimeLeft(35);
+            setTimeLeft(50);
             setOtp('');
             toast.success("New OTP sent!");
         } catch (err) {
