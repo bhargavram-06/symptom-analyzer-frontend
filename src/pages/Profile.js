@@ -1,0 +1,257 @@
+import React, { useState, useEffect } from 'react';
+// Removed AnimatePresence as it wasn't being used
+import { motion } from 'framer-motion'; 
+import { 
+    User, Droplet, Trash2, 
+    FileText, History, ArrowLeft, Camera, Eye, Plus, X, ChevronRight, Activity 
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+
+const Profile = () => {
+    const navigate = useNavigate();
+    const [isEditing, setIsEditing] = useState(false);
+    
+    // 1. Load User Data with persistence logic
+    const [userData, setUserData] = useState(
+        JSON.parse(localStorage.getItem('user')) || {
+            name: "User", email: "user@example.com", age: 21, 
+            bloodGroup: "O+", height: 170, weight: 65, profilePic: ""
+        }
+    );
+
+    // 2. Load History & Docs
+    const [history, setHistory] = useState(JSON.parse(localStorage.getItem('medicalHistory')) || []);
+    const [docs, setDocs] = useState(JSON.parse(localStorage.getItem('medicalDocs')) || []);
+
+    // Sync state changes to localStorage
+    useEffect(() => {
+        localStorage.setItem('user', JSON.stringify(userData));
+    }, [userData]);
+
+    useEffect(() => {
+        localStorage.setItem('medicalDocs', JSON.stringify(docs));
+    }, [docs]);
+
+    const bmi = (userData.weight / ((userData.height / 100) ** 2)).toFixed(1);
+
+    const handleFileUpload = (e, type) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (file.size > 1.5 * 1024 * 1024) {
+            return toast.error("File too large. Keep it under 1.5MB.");
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64String = reader.result;
+            if (type === 'profile') {
+                setUserData(prev => ({ ...prev, profilePic: base64String }));
+                toast.success("Profile photo updated!");
+            } else {
+                const newDoc = {
+                    id: Date.now(),
+                    name: file.name,
+                    date: new Date().toLocaleDateString(),
+                    fileData: base64String
+                };
+                setDocs(prev => [newDoc, ...prev]);
+                toast.success("Document added to vault!");
+            }
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const deleteDoc = (id) => {
+        setDocs(prev => prev.filter(d => d.id !== id));
+        toast.success("Document deleted");
+    };
+
+    const handleSave = () => {
+        localStorage.setItem('user', JSON.stringify(userData));
+        setIsEditing(false);
+        toast.success("Health Profile Saved!");
+    };
+
+    const clearHistory = () => {
+        if(window.confirm("Clear all analysis history?")) {
+            setHistory([]);
+            localStorage.removeItem('medicalHistory');
+            toast.success("History cleared");
+        }
+    };
+
+    // Helper for confidence badge colors
+    const getConfidenceColor = (score) => {
+        if (score >= 75) return "text-emerald-400 border-emerald-500/20 bg-emerald-500/5";
+        if (score >= 45) return "text-amber-400 border-amber-500/20 bg-amber-500/5";
+        return "text-rose-400 border-rose-500/20 bg-rose-500/5";
+    };
+
+    return (
+        <div className="min-h-screen bg-[#020617] text-white pb-20 font-sans selection:bg-blue-500/30">
+            {/* Header */}
+            <div className="bg-[#0f172a]/80 backdrop-blur-xl border-b border-white/5 p-6 sticky top-0 z-50 flex justify-between items-center">
+                <button onClick={() => navigate('/home')} className="flex items-center gap-2 text-slate-400 hover:text-white transition-all font-black text-[10px] uppercase tracking-widest">
+                    <ArrowLeft size={16}/> Dashboard
+                </button>
+                <h1 className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500 text-center flex-1">Vital Portal Vault</h1>
+                <div className="w-20"></div>
+            </div>
+
+            <div className="max-w-6xl mx-auto px-6 pt-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                {/* --- LEFT: USER DATA & BMI --- */}
+                <div className="lg:col-span-1 space-y-6">
+                    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-[#0f172a] border border-white/5 rounded-[3rem] p-8 text-center shadow-2xl relative">
+                        <div className="relative w-32 h-32 mx-auto mb-6 group">
+                            <div className="w-full h-full bg-slate-800 rounded-full border-4 border-blue-600 overflow-hidden flex items-center justify-center shadow-lg">
+                                {userData.profilePic ? <img src={userData.profilePic} alt="Profile" className="w-full h-full object-cover" /> : <User size={50} className="text-slate-600"/>}
+                            </div>
+                            <label className="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full border-2 border-[#0f172a] cursor-pointer hover:scale-110 transition-all">
+                                <Camera size={14}/>
+                                <input type="file" className="hidden" accept="image/*" onChange={(e) => handleFileUpload(e, 'profile')} />
+                            </label>
+                            {userData.profilePic && (
+                                <button onClick={() => setUserData({...userData, profilePic: ""})} className="absolute top-0 right-0 bg-red-600 p-2 rounded-full border-2 border-[#0f172a] hover:scale-110 transition-all shadow-lg">
+                                    <Trash2 size={14}/>
+                                </button>
+                            )}
+                        </div>
+
+                        <div className="space-y-4">
+                            <DetailRow label="Name" value={userData.name} isEditing={isEditing} onChange={(val) => setUserData({...userData, name: val})} />
+                            <DetailRow label="Email" value={userData.email} />
+                            <DetailRow label="Blood Group" value={userData.bloodGroup} isEditing={isEditing} onChange={(val) => setUserData({...userData, bloodGroup: val})} icon={<Droplet size={14} className="text-red-500"/>} />
+                            <DetailRow label="Height (cm)" value={userData.height} isEditing={isEditing} onChange={(val) => setUserData({...userData, height: val})} />
+                            <DetailRow label="Weight (kg)" value={userData.weight} isEditing={isEditing} onChange={(val) => setUserData({...userData, weight: val})} />
+                        </div>
+
+                        <button onClick={isEditing ? handleSave : () => setIsEditing(true)} className={`w-full mt-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${isEditing ? 'bg-emerald-600 shadow-emerald-500/20 text-white' : 'bg-white/5 border border-white/10 hover:bg-white/10 shadow-lg'}`}>
+                            {isEditing ? "Save All Changes" : "Edit Health Data"}
+                        </button>
+                    </motion.div>
+
+                    {/* BMI CARD */}
+                    <div className="bg-gradient-to-br from-blue-600 to-indigo-900 rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden">
+                        <Activity size={40} className="absolute -right-4 -top-4 text-white/10" />
+                        <p className="text-[10px] font-black text-blue-200 uppercase tracking-widest mb-2">Live BMI Score</p>
+                        <h2 className="text-5xl font-black italic mb-2 tracking-tighter">{bmi}</h2>
+                        <div className={`px-4 py-1 rounded-full border text-[8px] font-black uppercase inline-block ${
+                            bmi < 18.5 ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
+                            bmi < 25 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' :
+                            'bg-rose-500/20 text-rose-400 border-rose-500/30'
+                        }`}>
+                            {bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Healthy Weight' : 'Overweight'}
+                        </div>
+                    </div>
+                </div>
+
+                {/* --- RIGHT: HISTORY & DOCS --- */}
+                <div className="lg:col-span-2 space-y-6">
+                    
+                    {/* MEDICAL HISTORY WITH CONFIDENCE SCORES */}
+                    <div className="bg-[#0f172a] border border-white/5 rounded-[3rem] p-8 shadow-2xl">
+                        <div className="flex justify-between items-center mb-8">
+                            <h3 className="flex items-center gap-2 font-black text-[10px] uppercase tracking-[0.3em] text-slate-400">
+                                <History size={18} className="text-blue-500"/> Activity History
+                            </h3>
+                            <button onClick={clearHistory} className="text-rose-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-1 hover:bg-rose-500/10 px-3 py-1 rounded-lg transition-all">
+                                <X size={14}/> Clear History
+                            </button>
+                        </div>
+                        <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 no-scrollbar">
+                            {history.length > 0 ? history.map((item) => (
+                                <div key={item.id} onClick={() => navigate('/home', { state: { selectedSymptoms: item.symptoms } })} className="bg-white/5 p-5 rounded-[2rem] border border-white/5 flex items-center justify-between cursor-pointer hover:bg-white/10 transition-all group">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-xl bg-blue-600/10 flex items-center justify-center text-blue-500 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                                            <Activity size={18}/>
+                                        </div>
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <p className="text-xs font-black uppercase text-white tracking-wide">{item.disease}</p>
+                                                {item.confidence && (
+                                                    <span className={`px-2 py-0.5 rounded-full border text-[7px] font-black uppercase ${getConfidenceColor(item.confidence)}`}>
+                                                        {item.confidence}% AI
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <p className="text-[9px] text-slate-500 font-bold mt-0.5 uppercase tracking-tighter">{item.date} • {item.time || 'Logged'}</p>
+                                        </div>
+                                    </div>
+                                    <ChevronRight size={18} className="text-slate-700 group-hover:text-blue-500 transition-all" />
+                                </div>
+                            )) : (
+                                <div className="text-center py-10 border-2 border-dashed border-white/5 rounded-[2rem]">
+                                    <p className="text-slate-600 font-bold uppercase text-[10px] tracking-widest">No medical analysis found</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* DIGITAL VAULT */}
+                    <div className="bg-[#0f172a] border border-white/5 rounded-[3rem] p-8 shadow-2xl">
+                        <div className="flex justify-between items-center mb-8">
+                            <h3 className="flex items-center gap-2 font-black text-[10px] uppercase tracking-[0.3em] text-slate-400">
+                                <FileText size={18} className="text-emerald-500"/> Digital Vault
+                            </h3>
+                            <label className="bg-emerald-600/10 text-emerald-500 p-2.5 rounded-xl border border-emerald-500/20 cursor-pointer hover:bg-emerald-600 hover:text-white transition-all shadow-lg">
+                                <Plus size={20}/>
+                                <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'doc')} />
+                            </label>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {docs.map(doc => (
+                                <div key={doc.id} className="bg-white/5 p-6 rounded-[2.5rem] border border-white/5 group relative hover:border-blue-500/30 transition-all shadow-xl">
+                                    <button onClick={() => deleteDoc(doc.id)} className="absolute top-5 right-5 text-rose-500 opacity-0 group-hover:opacity-100 transition-all">
+                                        <Trash2 size={16}/>
+                                    </button>
+                                    <div className="flex items-center gap-4 mb-5">
+                                        <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                                            <FileText size={24}/>
+                                        </div>
+                                        <div className="min-w-0">
+                                            <p className="text-[10px] font-black uppercase text-slate-200 truncate pr-6">{doc.name}</p>
+                                            <p className="text-[9px] text-slate-600 font-bold mt-1 uppercase">{doc.date}</p>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => window.open(doc.fileData)} className="w-full bg-slate-900/50 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest border border-white/5 hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center gap-2">
+                                        <Eye size={14}/> View Document
+                                    </button>
+                                </div>
+                            ))}
+                            {docs.length === 0 && (
+                                <div className="col-span-full text-center py-10 border-2 border-dashed border-white/5 rounded-[2rem]">
+                                    <p className="text-slate-600 font-bold uppercase text-[10px] tracking-widest">Medical documents will appear here</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const DetailRow = ({ label, value, icon, isEditing, onChange }) => (
+    <div className="flex justify-between items-center border-b border-white/5 pb-4 last:border-0 pt-1">
+        <div className="flex items-center gap-2 text-slate-500">
+            {icon || <User size={14}/>}
+            <span className="text-[9px] font-black uppercase tracking-widest">{label}</span>
+        </div>
+        {isEditing && onChange ? (
+            <input 
+                type="text" 
+                value={value} 
+                onChange={(e) => onChange(e.target.value)} 
+                className="bg-slate-800 text-xs font-bold text-white px-3 py-1.5 rounded-lg outline-none border border-blue-500/30 w-32 text-right focus:border-blue-500 transition-all" 
+            />
+        ) : (
+            <span className="text-xs font-bold text-slate-200">{value}</span>
+        )}
+    </div>
+);
+
+export default Profile;
