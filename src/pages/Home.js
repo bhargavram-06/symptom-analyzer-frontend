@@ -72,7 +72,7 @@ const Home = () => {
         setLoading(true);
         try {
             const processed = symptomInput.split(',').map(s => s.toLowerCase().trim().replace(/ /g, "_")).filter(s => s !== "");
-            const { data } = await axios.post('https://symptom-analyzer-backend1.onrender.com/api/symptom/analyze', { symptoms: processed });
+            const { data } = await axios.post('https://symptom-analyzer-ml.onrender.com/api/symptom/analyze', { symptoms: processed });
 
             const newHistoryItem = { 
                 id: Date.now(), 
