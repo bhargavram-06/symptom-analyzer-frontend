@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion'; // Updated to latest framer-motion naming
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Search, Activity, User as Loader2, X, LayoutDashboard, 
     Info, LogOut, AlertTriangle, ChevronRight, Sun, Moon, 
@@ -69,24 +69,51 @@ const Home = () => {
     const handleSearch = async (e) => {
         e.preventDefault();
         if (!symptomInput) return toast.error("Select symptoms first");
+        
+        const token = localStorage.getItem('token'); // Fetch token for API auth
+        if (!token) return toast.error("Please login again");
+
         setLoading(true);
         try {
             const processed = symptomInput.split(',').map(s => s.toLowerCase().trim().replace(/ /g, "_")).filter(s => s !== "");
             const { data } = await axios.post('https://symptom-analyzer-ml.onrender.com/api/symptom/analyze', { symptoms: processed });
 
             const newHistoryItem = { 
-                id: Date.now(), 
+                id: Date.now().toString(), 
                 date: new Date().toLocaleDateString(), 
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), 
+                disease: data.disease,
                 symptoms: symptomInput, 
                 confidence: data.confidence,
-                ...data 
+                description: data.description,
+                diet: data.diet,
+                medicine: data.medicine,
+                precautions: data.precautions
             };
+
+            // 1. Update Local Storage for Instant UI feedback
             const existingHistory = JSON.parse(localStorage.getItem('medicalHistory')) || [];
-            localStorage.setItem('medicalHistory', JSON.stringify([newHistoryItem, ...existingHistory]));
+            const updatedHistory = [newHistoryItem, ...existingHistory];
+            localStorage.setItem('medicalHistory', JSON.stringify(updatedHistory));
+
+            // 2. PERMANENT SAVE: Sync to MongoDB Cloud
+            await axios.post('https://symptom-analyzer-backend1.onrender.com/api/auth/sync-profile', {
+                email: userData.email,
+                name: userData.name,
+                age: userData.age,
+                bloodGroup: userData.bloodGroup,
+                height: userData.height,
+                weight: userData.weight,
+                profilePic: userData.profilePic,
+                medicalHistory: updatedHistory, // Syncing the newly updated history
+                medicalDocs: JSON.parse(localStorage.getItem('medicalDocs')) || []
+            });
+
             setResult(data);
+            toast.success("Analysis complete & saved to cloud");
         } catch (err) { 
-            toast.error("ML Service Offline"); 
+            console.error(err);
+            toast.error("ML Service Offline or Sync Failed"); 
         } finally { 
             setLoading(false); 
         }
@@ -209,9 +236,8 @@ const Home = () => {
                     <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center p-0.5 shadow-md border border-slate-100 overflow-hidden">
                         <img src="/logo.png" alt="Logo" className="w-full h-full object-contain scale-150" />
                     </div>
-                    {/* 'hidden sm:block' was hiding it on mobile. We removed it. */}
                     <h1 className="text-base md:text-lg font-black italic tracking-tighter uppercase">
-                    Vital<span className="text-blue-600">Portal</span>
+                        Vital<span className="text-blue-600">Portal</span>
                     </h1>
                 </div>
 
