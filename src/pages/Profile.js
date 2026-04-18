@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react'; // Removed useEffect
 import { motion } from 'framer-motion'; 
 import { 
     User, Droplet, Trash2, 
@@ -38,9 +38,8 @@ const Profile = () => {
                 medicalHistory: updatedHistory,
                 medicalDocs: updatedDocs
             });
-            console.log("Cloud Sync Successful");
         } catch (err) {
-            toast.error("Cloud Sync Failed");
+            console.error("Cloud Sync Failed", err);
         }
     };
 
@@ -48,7 +47,6 @@ const Profile = () => {
         const file = e.target.files[0];
         if (!file) return;
 
-        // Increased limit to 10MB to match server.js updates
         if (file.size > 10 * 1024 * 1024) {
             return toast.error("File too large. Keep it under 10MB.");
         }
@@ -142,7 +140,7 @@ const Profile = () => {
                             )}
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-4 text-left">
                             <DetailRow label="Name" value={userData.name} isEditing={isEditing} onChange={(val) => setUserData({...userData, name: val})} />
                             <DetailRow label="Email" value={userData.email} />
                             <DetailRow label="Blood Group" value={userData.bloodGroup} isEditing={isEditing} onChange={(val) => setUserData({...userData, bloodGroup: val})} icon={<Droplet size={14} className="text-red-500"/>} />
