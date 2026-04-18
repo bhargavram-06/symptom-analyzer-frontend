@@ -27,7 +27,8 @@ const ResetPassword = () => {
     const handleResend = async () => {
         setLoading(true);
         try {
-            await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
+            // CHANGE THIS:
+            await axios.post('https://symptom-analyzer-backend1.onrender.com/api/auth/forgot-password', { email });
             setTimeLeft(35);
             setOtp('');
             toast.success("New OTP sent!");
@@ -42,7 +43,8 @@ const ResetPassword = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await axios.post('http://localhost:5000/api/auth/verify-otp', { email, otp });
+            // CHANGE THIS:
+            const res = await axios.post('https://symptom-analyzer-backend1.onrender.com/api/auth/verify-otp', { email, otp });
             if (res.data.success) {
                 setIsVerified(true);
                 toast.success("OTP Verified!");
@@ -58,7 +60,8 @@ const ResetPassword = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            await axios.post('http://localhost:5000/api/auth/reset-password', { email, otp, newPassword });
+            // CHANGE THIS:
+            await axios.post('https://symptom-analyzer-backend1.onrender.com/api/auth/reset-password', { email, otp, newPassword });
             toast.success("Password Updated!");
             navigate('/login');
         } catch (err) {

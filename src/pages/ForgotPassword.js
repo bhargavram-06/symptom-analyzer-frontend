@@ -14,8 +14,8 @@ const ForgotPassword = () => {
         e.preventDefault();
         setLoading(true); // Start Spinner
         try {
-            await axios.post('http://localhost:5000/api/auth/forgot-password', { 
-                email: email.toLowerCase() 
+               await axios.post('https://symptom-analyzer-backend1.onrender.com/api/auth/forgot-password', {
+               email: email.toLowerCase()
             });
             toast.success("OTP sent to your email!");
             navigate('/reset-password', { state: { email: email.toLowerCase() } });
