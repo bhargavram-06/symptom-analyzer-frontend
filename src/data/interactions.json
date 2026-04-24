@@ -1,0 +1,526 @@
+[
+  {
+    "symptom": "itching",
+    "recommendation": "• Apply moisturizer regularly. • Use OTC antihistamines if needed. • Avoid hot baths and harsh soaps."
+  },
+  {
+    "symptom": "skin_rash",
+    "recommendation": "• Apply hydrocortisone cream. • Use a cool compress to reduce inflammation. • Avoid scratching to prevent infection."
+  },
+  {
+    "symptom": "nodal_skin_eruptions",
+    "recommendation": "• Keep the area clean and dry. • Avoid picking or squeezing eruptions. • Consult a dermatologist if they spread."
+  },
+  {
+    "symptom": "continuous_sneezing",
+    "recommendation": "• Use antihistamines. • Identify and avoid allergens like dust or pollen. • Use a saline nasal spray."
+  },
+  {
+    "symptom": "shivering",
+    "recommendation": "• Wear warm clothing. • Check for fever. • Rest and stay hydrated."
+  },
+  {
+    "symptom": "chills",
+    "recommendation": "• Layer your clothing to maintain warmth. • Monitor body temperature frequently. • Stay hydrated with warm fluids."
+  },
+  {
+    "symptom": "joint_pain",
+    "recommendation": "• Rest the affected joint. • Apply a warm compress. • Use anti-inflammatory pain relievers."
+  },
+  {
+    "symptom": "stomach_pain",
+    "recommendation": "• Use a heating pad for comfort. • Drink peppermint or ginger tea. • Avoid spicy and fatty foods."
+  },
+  {
+    "symptom": "acidity",
+    "recommendation": "• Take antacids. • Avoid lying down immediately after eating. • Limit spicy and fatty food intake."
+  },
+  {
+    "symptom": "ulcers_on_tongue",
+    "recommendation": "• Avoid spicy and acidic foods. • Use topical oral gels for pain. • Ensure good oral hygiene."
+  },
+  {
+    "symptom": "muscle_wasting",
+    "recommendation": "• Ensure adequate protein intake. • Engage in gentle resistance exercises. • Consult a doctor to rule out underlying causes."
+  },
+  {
+    "symptom": "vomiting",
+    "recommendation": "• Sip clear fluids slowly. • Rest your stomach; avoid solids for a few hours. • See a doctor if persistent for 24+ hours."
+  },
+  {
+    "symptom": "burning_micturition",
+    "recommendation": "• Increase water intake significantly. • Avoid caffeine and irritants. • See a doctor for a possible infection."
+  },
+  {
+    "symptom": "spotting_urination",
+    "recommendation": "• Drink plenty of water. • Monitor for pain or frequency changes. • Consult a healthcare provider immediately."
+  },
+  {
+    "symptom": "fatigue",
+    "recommendation": "• Prioritize 7-9 hours of sleep. • Maintain a balanced, iron-rich diet. • See a doctor if fatigue is persistent."
+  },
+  {
+    "symptom": "weight_gain",
+    "recommendation": "• Follow a structured exercise routine. • Maintain a calorie-balanced diet. • Check thyroid function if unexplained."
+  },
+  {
+    "symptom": "anxiety",
+    "recommendation": "• Practice deep breathing exercises. • Limit caffeine and stimulant intake. • Maintain a regular sleep schedule."
+  },
+  {
+    "symptom": "cold_hands_and_feets",
+    "recommendation": "• Wear warm clothing/gloves. • Perform light circulation exercises. • Check iron and B12 levels."
+  },
+  {
+    "symptom": "mood_swings",
+    "recommendation": "• Ensure adequate sleep and regular meals. • Manage stress through exercise. • Seek social connection."
+  },
+  {
+    "symptom": "weight_loss",
+    "recommendation": "• Consult a doctor to identify the cause. • Ensure high-protein, balanced meals. • Track daily calorie intake."
+  },
+  {
+    "symptom": "restlessness",
+    "recommendation": "• Practice relaxation techniques. • Limit screen time before bed. • Engage in regular physical activity."
+  },
+  {
+    "symptom": "lethargy",
+    "recommendation": "• Stay hydrated and eat small meals. • Ensure consistent sleep patterns. • Check for vitamin deficiencies."
+  },
+  {
+    "symptom": "patches_in_throat",
+    "recommendation": "• Gargle with warm salt water. • Drink warm lemon and honey tea. • Consult a doctor for a physical exam."
+  },
+  {
+    "symptom": "irregular_sugar_level",
+    "recommendation": "• Follow your prescribed medical plan. • Monitor glucose levels frequently. • Stay hydrated with water."
+  },
+  {
+    "symptom": "cough",
+    "recommendation": "• Stay hydrated with warm fluids. • Use steam inhalation. • Try honey or lozenges for relief."
+  },
+  {
+    "symptom": "high_fever",
+    "recommendation": "• See a doctor immediately. • Use cool compresses on the forehead. • Take paracetamol as directed."
+  },
+  {
+    "symptom": "sunken_eyes",
+    "recommendation": "• Increase fluid and electrolyte intake. • Ensure you are getting deep, restful sleep. • Check for dehydration signs."
+  },
+  {
+    "symptom": "breathlessness",
+    "recommendation": "• Sit upright and take slow breaths. • Avoid physical exertion. • Seek emergency care if it worsens."
+  },
+  {
+    "symptom": "sweating",
+    "recommendation": "• Wear breathable cotton fabrics. • Use clinical-strength antiperspirant. • Stay hydrated to replace lost fluids."
+  },
+  {
+    "symptom": "dehydration",
+    "recommendation": "• Sip water or ORS solution. • Eat fruits with high water content. • Rest in a cool environment."
+  },
+  {
+    "symptom": "indigestion",
+    "recommendation": "• Eat smaller, more frequent meals. • Avoid lying down after eating. • Identify and avoid trigger foods."
+  },
+  {
+    "symptom": "headache",
+    "recommendation": "• Rest in a dark, quiet room. • Stay hydrated. • Use OTC pain relievers."
+  },
+  {
+    "symptom": "yellowish_skin",
+    "recommendation": "• Seek immediate medical attention. • Avoid alcohol consumption. • Monitor for other signs of jaundice."
+  },
+  {
+    "symptom": "dark_urine",
+    "recommendation": "• Increase water intake immediately. • Limit caffeine and alcohol. • See a doctor if color persists."
+  },
+  {
+    "symptom": "nausea",
+    "recommendation": "• Drink ginger or peppermint tea. • Eat small, bland, frequent meals. • Stay hydrated."
+  },
+  {
+    "symptom": "loss_of_appetite",
+    "recommendation": "• Eat small portions of your favorite foods. • Try high-calorie smoothies. • See a doctor if prolonged."
+  },
+  {
+    "symptom": "pain_behind_the_eyes",
+    "recommendation": "• Rest your eyes from all screens. • Apply a warm compress. • Check for sinus pressure issues."
+  },
+  {
+    "symptom": "back_pain",
+    "recommendation": "• Use hot/cold packs. • Perform gentle hourly stretching. • Use lumbar support while sitting."
+  },
+  {
+    "symptom": "constipation",
+    "recommendation": "• Increase water and fiber intake. • Try a mild OTC laxative. • Stay physically active."
+  },
+  {
+    "symptom": "abdominal_pain",
+    "recommendation": "• Use a heating pad. • Avoid heavy or spicy meals. • Rest in a comfortable position."
+  },
+  {
+    "symptom": "diarrhoea",
+    "recommendation": "• Use ORS solution for hydration. • Follow the BRAT diet (Bananas, Rice). • Avoid dairy."
+  },
+  {
+    "symptom": "mild_fever",
+    "recommendation": "• Take paracetamol 500mg. • Drink plenty of fluids. • Get adequate rest."
+  },
+  {
+    "symptom": "yellow_urine",
+    "recommendation": "• Drink more water throughout the day. • Check if taking Vitamin B supplements. • Monitor hydration levels."
+  },
+  {
+    "symptom": "yellowing_of_eyes",
+    "recommendation": "• Seek medical help immediately. • Do not ignore this sign. • Possible liver or gallbladder issue."
+  },
+  {
+    "symptom": "acute_liver_failure",
+    "recommendation": "• Seek emergency medical care immediately. • Do not attempt home remedies. • Total bed rest required."
+  },
+  {
+    "symptom": "fluid_overload",
+    "recommendation": "• Elevate swollen areas. • Reduce salt intake significantly. • Consult a doctor for diuretics."
+  },
+  {
+    "symptom": "swelling_of_stomach",
+    "recommendation": "• Avoid gas-producing foods. • Walk gently after meals. • Consult a doctor if painful."
+  },
+  {
+    "symptom": "swelled_lymph_nodes",
+    "recommendation": "• Apply a warm compress to the area. • Rest and stay hydrated. • See a doctor if they don't shrink."
+  },
+  {
+    "symptom": "malaise",
+    "recommendation": "• Ensure 8 hours of restful sleep. • Maintain a balanced, healthy diet. • Reduce stress through relaxation."
+  },
+  {
+    "symptom": "blurred_and_distorted_vision",
+    "recommendation": "• Rest your eyes immediately. • Avoid reading or screens. • See an eye specialist if sudden."
+  },
+  {
+    "symptom": "phlegm",
+    "recommendation": "• Use steam inhalation twice daily. • Drink plenty of warm water. • Use OTC expectorants."
+  },
+  {
+    "symptom": "throat_irritation",
+    "recommendation": "• Gargle with warm salt water. • Use honey and lemon. • Use a humidifier in your room."
+  },
+  {
+    "symptom": "redness_of_eyes",
+    "recommendation": "• Use lubricating artificial tears. • Avoid rubbing your eyes. • Rest eyes from light."
+  },
+  {
+    "symptom": "sinus_pressure",
+    "recommendation": "• Use steam inhalation. • Apply a warm compress to the face. • Use saline nasal sprays."
+  },
+  {
+    "symptom": "runny_nose",
+    "recommendation": "• Use OTC antihistamines. • Drink warm fluids. • Use saline nasal drops."
+  },
+  {
+    "symptom": "congestion",
+    "recommendation": "• Use a humidifier. • Try steam inhalation. • Sleep with your head elevated."
+  },
+  {
+    "symptom": "chest_pain",
+    "recommendation": "• Seek emergency care immediately. • Do not ignore this symptom. • Sit and rest; avoid activity."
+  },
+  {
+    "symptom": "weakness_in_limbs",
+    "recommendation": "• Rest and avoid physical strain. • Ensure balanced nutrition. • See a doctor if sudden or severe."
+  },
+  {
+    "symptom": "fast_heart_rate",
+    "recommendation": "• Practice deep, slow breathing. • Reduce caffeine and stimulants. • Rest in a quiet place."
+  },
+  {
+    "symptom": "pain_during_bowel_movements",
+    "recommendation": "• Increase fiber and water intake. • Use stool softeners if needed. • See a doctor for evaluation."
+  },
+  {
+    "symptom": "pain_in_anal_region",
+    "recommendation": "• Use warm sitz baths. • Avoid prolonged sitting. • Use OTC hemorrhoid creams."
+  },
+  {
+    "symptom": "bloody_stool",
+    "recommendation": "• Seek immediate medical evaluation. • Avoid straining during movements. • Note the color and frequency."
+  },
+  {
+    "symptom": "irritation_in_anus",
+    "recommendation": "• Keep the area clean and dry. • Use cotton underwear. • Avoid scented soaps or wipes."
+  },
+  {
+    "symptom": "neck_pain",
+    "recommendation": "• Practice neck stretching exercises. • Improve your posture. • Use a supportive pillow."
+  },
+  {
+    "symptom": "dizziness",
+    "recommendation": "• Sit or lie down immediately. • Move slowly when standing up. • Stay well-hydrated."
+  },
+  {
+    "symptom": "cramps",
+    "recommendation": "• Stretch the muscle gently. • Apply heat or massage the area. • Ensure adequate magnesium/calcium."
+  },
+  {
+    "symptom": "bruising",
+    "recommendation": "• Apply ice to new bruises. • Elevate the area if possible. • Check Vitamin K/C levels."
+  },
+  {
+    "symptom": "obesity",
+    "recommendation": "• Follow a balanced, portion-controlled diet. • Regular cardiovascular exercise. • Consult a professional for a plan."
+  },
+  {
+    "symptom": "swollen_legs",
+    "recommendation": "• Elevate legs above heart level. • Reduce dietary salt. • Wear compression stockings."
+  },
+  {
+    "symptom": "swollen_blood_vessels",
+    "recommendation": "• Elevate the affected limb. • Use compression garments. • Regular light walking/exercise."
+  },
+  {
+    "symptom": "puffy_face_and_eyes",
+    "recommendation": "• Apply a cool compress. • Reduce salt intake. • Sleep with head slightly elevated."
+  },
+  {
+    "symptom": "enlarged_thyroid",
+    "recommendation": "• Consult an endocrinologist. • Monitor for swallowing issues. • Get a thyroid hormone blood test."
+  },
+  {
+    "symptom": "brittle_nails",
+    "recommendation": "• Moisturize nails frequently. • Consider biotin supplements. • Wear gloves during house work."
+  },
+  {
+    "symptom": "swollen_extremeties",
+    "recommendation": "• Reduce sodium in your diet. • Elevate hands/feet when resting. • Stay active to promote circulation."
+  },
+  {
+    "symptom": "excessive_hunger",
+    "recommendation": "• Eat high-protein, high-fiber meals. • Stay hydrated. • Check blood sugar levels."
+  },
+  {
+    "symptom": "extra_marital_contacts",
+    "recommendation": "• Get tested for STIs immediately. • Practice safe sexual habits. • Consult a healthcare provider."
+  },
+  {
+    "symptom": "drying_and_tingling_lips",
+    "recommendation": "• Apply lip balm frequently. • Stay hydrated. • Check for Vitamin B12 deficiency."
+  },
+  {
+    "symptom": "slurred_speech",
+    "recommendation": "• Seek emergency medical help immediately. • Do not delay treatment. • Note the onset time."
+  },
+  {
+    "symptom": "knee_pain",
+    "recommendation": "• Use the RICE method. • Avoid high-impact activity. • Use a knee support if needed."
+  },
+  {
+    "symptom": "hip_joint_pain",
+    "recommendation": "• Perform gentle hip stretches. • Use heat for comfort. • Avoid sleeping on the painful side."
+  },
+  {
+    "symptom": "muscle_weakness",
+    "recommendation": "• Rest and avoid physical strain. • Ensure adequate protein intake. • See a doctor if persistent."
+  },
+  {
+    "symptom": "stiff_neck",
+    "recommendation": "• Practice gentle neck stretches. • Maintain ergonomic posture. • Apply heat to the area."
+  },
+  {
+    "symptom": "swelling_joints",
+    "recommendation": "• Rest the affected joints. • Apply ice/cold compresses. • Use anti-inflammatory meds."
+  },
+  {
+    "symptom": "movement_stiffness",
+    "recommendation": "• Engage in gentle daily movement. • Use warm compresses in the morning. • Stay physically active."
+  },
+  {
+    "symptom": "spinning_movements",
+    "recommendation": "• Sit or lie down immediately. • Avoid sudden head movements. • Focus on a stationary object."
+  },
+  {
+    "symptom": "loss_of_balance",
+    "recommendation": "• Use assistive devices if needed. • Perform balance exercises. • Clear home trip hazards."
+  },
+  {
+    "symptom": "unsteadiness",
+    "recommendation": "• Move slowly and cautiously. • Use a walking aid if necessary. • Get a neurological evaluation."
+  },
+  {
+    "symptom": "weakness_of_one_body_side",
+    "recommendation": "• Seek emergency medical help immediately. • Possible sign of a stroke. • Do not ignore."
+  },
+  {
+    "symptom": "loss_of_smell",
+    "recommendation": "• Try olfactory 'smell training'. • Check for nasal congestion. • See a doctor if persistent."
+  },
+  {
+    "symptom": "bladder_discomfort",
+    "recommendation": "• Drink plenty of water. • Limit caffeine and acidic foods. • See a doctor for a check-up."
+  },
+  {
+    "symptom": "foul_smell_of_urine",
+    "recommendation": "• Increase daily water intake. • See a doctor for an infection check. • Check for dietary causes."
+  },
+  {
+    "symptom": "continuous_feel_of_urine",
+    "recommendation": "• Drink water frequently. • Practice pelvic floor exercises. • Consult a doctor for evaluation."
+  },
+  {
+    "symptom": "passage_of_gases",
+    "recommendation": "• Avoid gas-producing foods. • Take a light walk after eating. • Try OTC simethicone."
+  },
+  {
+    "symptom": "internal_itching",
+    "recommendation": "• Consult a doctor for evaluation. • Avoid potential irritants. • Maintain good hygiene."
+  },
+  {
+    "symptom": "toxic_look_(typhos)",
+    "recommendation": "• Seek immediate medical attention. • Monitor for high fever. • Ensure complete bed rest."
+  },
+  {
+    "symptom": "depression",
+    "recommendation": "• Seek professional counseling. • Ensure daily sunlight exposure. • Maintain social connections."
+  },
+  {
+    "symptom": "irritability",
+    "recommendation": "• Ensure adequate sleep (7-9 hours). • Manage stress through exercise. • Eat regular, balanced meals."
+  },
+  {
+    "symptom": "muscle_pain",
+    "recommendation": "• Rest the affected area. • Gentle massage for relief. • Use OTC pain relievers."
+  },
+  {
+    "symptom": "altered_sensorium",
+    "recommendation": "• Seek immediate medical attention. • Stay with the patient. • Note any recent medications."
+  },
+  {
+    "symptom": "red_spots_over_body",
+    "recommendation": "• Use hydrocortisone cream. • Avoid scratching. • Cool compresses for comfort."
+  },
+  {
+    "symptom": "belly_pain",
+    "recommendation": "• Use a heating pad. • Sip ginger or peppermint tea. • Follow a bland diet."
+  },
+  {
+    "symptom": "abnormal_menstruation",
+    "recommendation": "• Track your cycle accurately. • Consult a gynecologist. • Check for iron deficiency."
+  },
+  {
+    "symptom": "dischromic_patches",
+    "recommendation": "• Use high-SPF sunscreen. • Moisturize the area daily. • Consult a dermatologist."
+  },
+  {
+    "symptom": "watering_from_eyes",
+    "recommendation": "• Wipe gently with clean tissue. • Check for seasonal allergies. • Use artificial tears."
+  },
+  {
+    "symptom": "increased_appetite",
+    "recommendation": "• Focus on high-fiber, filling foods. • Drink water before meals. • Monitor for weight changes."
+  },
+  {
+    "symptom": "polyuria",
+    "recommendation": "• Monitor your daily fluid intake. • Get a blood sugar test. • Consult a doctor."
+  },
+  {
+    "symptom": "family_history",
+    "recommendation": "• Discuss with your doctor. • Undergo regular health screenings. • Maintain a healthy lifestyle."
+  },
+  {
+    "symptom": "mucoid_sputum",
+    "recommendation": "• Increase fluid intake. • Use steam inhalation. • Use OTC expectorants."
+  },
+  {
+    "symptom": "rusty_sputum",
+    "recommendation": "• Consult a doctor immediately. • Possible sign of infection. • Avoid smoking."
+  },
+  {
+    "symptom": "lack_of_concentration",
+    "recommendation": "• Break tasks into small steps. • Ensure 8 hours of sleep. • Minimize distractions."
+  },
+  {
+    "symptom": "visual_disturbances",
+    "recommendation": "• Seek immediate eye evaluation. • Rest eyes from screens. • Avoid driving."
+  },
+  {
+    "symptom": "receiving_blood_transfusion",
+    "recommendation": "• Monitor for fever or itching. • Follow post-procedure instructions. • Report any discomfort."
+  },
+  {
+    "symptom": "receiving_unsterile_injections",
+    "recommendation": "• Get tested for bloodborne diseases. • Monitor the injection site. • Consult a healthcare provider."
+  },
+  {
+    "symptom": "coma",
+    "recommendation": "• Critical medical emergency. • Emergency life support required. • Hospitalization is mandatory."
+  },
+  {
+    "symptom": "stomach_bleeding",
+    "recommendation": "• Seek immediate emergency help. • Do not eat or drink anything. • Total rest required."
+  },
+  {
+    "symptom": "distention_of_abdomen",
+    "recommendation": "• Avoid gas-producing foods. • Take a light walk after meals. • Consult a doctor if painful."
+  },
+  {
+    "symptom": "history_of_alcohol_consumption",
+    "recommendation": "• Discuss with a professional. • Monitor liver function. • Consider support groups."
+  },
+  {
+    "symptom": "blood_in_sputum",
+    "recommendation": "• Seek medical evaluation immediately. • Avoid irritants/smoke. • Total rest required."
+  },
+  {
+    "symptom": "prominent_veins_on_calf",
+    "recommendation": "• Elevate your legs when resting. • Wear compression stockings. • Regular light exercise."
+  },
+  {
+    "symptom": "palpitations",
+    "recommendation": "• Practice deep breathing. • Limit caffeine and stimulants. • See a doctor if frequent."
+  },
+  {
+    "symptom": "painful_walking",
+    "recommendation": "• Wear supportive footwear. • Use the RICE method for pain. • Consult an orthopedic."
+  },
+  {
+    "symptom": "pus_filled_pimples",
+    "recommendation": "• Use a gentle daily cleanser. • Do not pick or squeeze. • Use OTC acne treatments."
+  },
+  {
+    "symptom": "blackheads",
+    "recommendation": "• Wash face twice daily. • Use salicylic acid products. • Do not pick or squeeze."
+  },
+  {
+    "symptom": "scurring",
+    "recommendation": "• Use scar-reducing creams. • Avoid sun exposure on scars. • Consult a dermatologist."
+  },
+  {
+    "symptom": "skin_peeling",
+    "recommendation": "• Apply thick moisturizer daily. • Avoid harsh soaps. • Stay hydrated."
+  },
+  {
+    "symptom": "silver_like_dusting",
+    "recommendation": "• Use thick moisturizing creams. • Avoid scratching the skin. • Consult a dermatologist."
+  },
+  {
+    "symptom": "small_dents_in_nails",
+    "recommendation": "• Keep nails moisturized. • Avoid biting your nails. • Consult a dermatologist."
+  },
+  {
+    "symptom": "inflammatory_nails",
+    "recommendation": "• Soak in warm salt water. • Avoid harsh chemicals. • Consult a dermatologist."
+  },
+  {
+    "symptom": "blister",
+    "recommendation": "• Do not pop the blister. • Keep the area clean and covered. • Apply antibiotic ointment."
+  },
+  {
+    "symptom": "red_sore_around_nose",
+    "recommendation": "• Keep the area clean and dry. • Apply antibiotic ointment. • Avoid touching the sore."
+  },
+  {
+    "symptom": "yellow_crust_ooze",
+    "recommendation": "• Seek medical evaluation. • Clean gently with mild soap. • Possible bacterial infection."
+  }
+]

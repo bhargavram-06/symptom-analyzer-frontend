@@ -86,8 +86,8 @@ const Notifications = () => {
                             <Bell size={24}/>
                         </div>
                         <div>
-                            <p className="text-xs font-black uppercase tracking-wide">Cloud Sync Active</p>
-                            <p className="text-[10px] text-slate-500 uppercase font-bold">Your medical history is now secured on any device.</p>
+                            <p className="text-xs font-black uppercase tracking-wide">Chatbot Integration</p>
+                            <p className="text-[10px] text-slate-500 uppercase font-bold">Integrated with upto 130+ symptoms.</p>
                         </div>
                     </div>
 
