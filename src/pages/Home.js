@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Search, Activity, User as Loader2, X, LayoutDashboard, 
@@ -25,7 +26,7 @@ const Home = () => {
     const [isMedModalOpen, setIsMedModalOpen] = useState(false);
     const [userData, setUserData] = useState({ name: "User", weight: 65, height: 170, profilePic: "", email: "" });
 
-    // --- Quick Relief (1-by-1 Dataset Search) States ---
+    // --- Quick Relief States ---
     const [reliefQuery, setReliefQuery] = useState("");
     const [reliefResult, setReliefResult] = useState(null);
 
@@ -55,6 +56,11 @@ const Home = () => {
         "pus_filled_pimples", "blackheads", "scurring", "skin_peeling", "silver_like_dusting", "small_dents_in_nails", 
         "inflammatory_nails", "blister", "red_sore_around_nose", "yellow_crust_ooze"
     ];
+
+    // --- Dynamic Search Filter Logic ---
+    const filteredSymptoms = allSymptoms.filter(s => 
+        s.replace(/_/g, ' ').toLowerCase().includes(symptomInput.toLowerCase().split(',').pop().trim())
+    );
 
     // --- Effects ---
     useEffect(() => {
@@ -145,7 +151,6 @@ const Home = () => {
         if (!result) return;
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
-
         doc.setFont("helvetica", "bold");
         doc.setFontSize(24);
         doc.setTextColor(37, 99, 235);
@@ -156,45 +161,38 @@ const Home = () => {
         doc.setDrawColor(37, 99, 235);
         doc.setLineWidth(0.5);
         doc.line(20, 32, pageWidth - 20, 32);
-
         doc.setFontSize(12);
         doc.setTextColor(0, 0, 0);
         doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 45);
         doc.text(`Patient: ${userData.name}`, 20, 52);
         doc.text(`AI Confidence: ${result.confidence}%`, pageWidth - 20, 52, { align: "right" });
-
         doc.setFontSize(18);
         doc.setTextColor(37, 99, 235);
         doc.text("DIAGNOSIS:", 20, 70);
         doc.setFontSize(16);
         doc.setTextColor(0, 0, 0);
         doc.text(result.disease.toUpperCase(), 20, 80);
-
         doc.setFontSize(12);
         doc.setFont("helvetica", "bold");
         doc.text("Medical Description:", 20, 95);
         doc.setFont("helvetica", "normal");
         const descLines = doc.splitTextToSize(result.description, pageWidth - 40);
         doc.text(descLines, 20, 102);
-
         const nextY = 102 + (descLines.length * 7);
         doc.setFont("helvetica", "bold");
         doc.text("Nutrition Plan:", 20, nextY + 10);
         doc.setFont("helvetica", "normal");
         doc.text(result.diet, 20, nextY + 17);
-
         doc.setFont("helvetica", "bold");
         doc.text("Medication:", pageWidth / 2, nextY + 10);
         doc.setFont("helvetica", "normal");
         doc.text(result.medicine, pageWidth / 2, nextY + 17);
-
         doc.setFont("helvetica", "bold");
         doc.text("Safety Precautions:", 20, nextY + 35);
         doc.setFont("helvetica", "normal");
         result.precautions?.forEach((p, i) => {
             doc.text(`• ${p}`, 25, nextY + 45 + (i * 7));
         });
-
         doc.save(`${result.disease}_Medical_Report.pdf`);
         toast.success("PDF Downloaded");
     };
@@ -223,6 +221,27 @@ const Home = () => {
 
     return (
         <div className={`min-h-screen transition-colors duration-500 ${darkMode ? 'bg-[#020617] text-white' : 'bg-[#f8fafc] text-slate-900'} pb-20 font-sans relative overflow-x-hidden`}>
+            
+            <Helmet>
+                <title>Vital Portal | AI Symptom Analyzer & Care Guide</title>
+                <meta name="description" content="Use Vital Portal's AI-driven diagnostic engine to analyze 133 symptoms instantly. Get personalized nutrition plans and professional care recommendations." />
+                <meta name="keywords" content="symptom analyzer, AI health, medical diagnostic tool, health portal, medical records sync" />
+            </Helmet>
+
+            {/* --- Blinking Animation Style --- */}
+            <style>
+                {`
+                    @keyframes blink {
+                        0% { opacity: 1.0; }
+                        50% { opacity: 0.3; transform: scale(1.03); }
+                        100% { opacity: 1; }
+                    }
+                    .blink-btn {
+                        animation: blink 2.2s infinite ease-in-out;
+                    }
+                `}
+            </style>
+
             <Chatbot />
 
             {/* --- HEADER --- */}
@@ -239,10 +258,12 @@ const Home = () => {
                 <div className="flex items-center gap-2 md:gap-4">
                     <div className="hidden lg:flex items-center gap-3">
                         <button onClick={() => navigate('/home')} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white font-bold text-[10px] uppercase tracking-widest active:scale-95 transition-all shadow-md"><LayoutDashboard size={14}/> Home</button>
-                        <button onClick={() => setIsMedModalOpen(true)} className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-[10px] uppercase tracking-widest border transition-all ${darkMode ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white' : 'bg-emerald-50 border-emerald-100 text-emerald-600 hover:bg-emerald-600 hover:text-white'}`}><ShieldCheck size={14}/> Quick Relief</button>
+                        
+                        {/* --- Blinking Quick Relief Button --- */}
+                        <button onClick={() => setIsMedModalOpen(true)} className={`blink-btn flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-[10px] uppercase tracking-widest border transition-all ${darkMode ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white shadow-lg shadow-emerald-500/20' : 'bg-emerald-50 border-emerald-100 text-emerald-600 hover:bg-emerald-600 hover:text-white'}`}><ShieldCheck size={14}/> Quick Relief</button>
+                        
                         <button onClick={() => navigate('/profile')} className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-[10px] uppercase tracking-widest border transition-all ${darkMode ? 'bg-white/5 border-white/10 text-white hover:bg-white/10' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}><FileText size={14}/> My Reports</button>
                         <button onClick={() => navigate('/notifications')} className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-[10px] uppercase tracking-widest border transition-all ${darkMode ? 'bg-white/5 border-white/10 text-white hover:bg-white/10' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}><Bell size={14}/> Notifications</button>
-                        {/* --- ADDED ABOUT BUTTON --- */}
                         <button onClick={() => navigate('/about')} className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-[10px] uppercase tracking-widest border transition-all ${darkMode ? 'bg-white/5 border-white/10 text-white hover:bg-white/10' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}><Info size={14}/> About</button>
                     </div>
 
@@ -265,10 +286,12 @@ const Home = () => {
                             <div className="flex justify-between items-center mb-10"><span className="font-black uppercase text-blue-600 tracking-widest">Navigation</span><button onClick={() => setIsSidebarOpen(false)} className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-rose-500"><X size={20}/></button></div>
                             <div className="flex flex-col gap-5">
                                 <button onClick={() => { navigate('/home'); setIsSidebarOpen(false); }} className="flex items-center gap-3 p-4 rounded-xl hover:bg-blue-600 hover:text-white transition-all font-bold uppercase text-xs tracking-widest"><LayoutDashboard size={18}/> Home</button>
-                                <button onClick={() => { setIsMedModalOpen(true); setIsSidebarOpen(false); }} className="flex items-center gap-3 p-4 rounded-xl hover:bg-emerald-600 hover:text-white transition-all font-bold uppercase text-xs tracking-widest"><ShieldCheck size={18}/> Quick Relief</button>
+                                
+                                {/* --- Blinking Sidebar Button --- */}
+                                <button onClick={() => { setIsMedModalOpen(true); setIsSidebarOpen(false); }} className="blink-btn flex items-center gap-3 p-4 rounded-xl bg-emerald-600 text-white transition-all font-bold uppercase text-xs tracking-widest shadow-lg shadow-emerald-500/20"><ShieldCheck size={18}/> Quick Relief</button>
+                                
                                 <button onClick={() => { navigate('/profile'); setIsSidebarOpen(false); }} className="flex items-center gap-3 p-4 rounded-xl hover:bg-blue-600 hover:text-white transition-all font-bold uppercase text-xs tracking-widest"><FileText size={18}/> My Reports</button>
                                 <button onClick={() => { navigate('/notifications'); setIsSidebarOpen(false); }} className="flex items-center gap-3 p-4 rounded-xl hover:bg-blue-600 hover:text-white transition-all font-bold uppercase text-xs tracking-widest"><Bell size={18}/> Notifications</button>
-                                {/* --- SIDEBAR ABOUT BUTTON --- */}
                                 <button onClick={() => { navigate('/about'); setIsSidebarOpen(false); }} className="flex items-center gap-3 p-4 rounded-xl hover:bg-blue-600 hover:text-white transition-all font-bold uppercase text-xs tracking-widest"><Info size={18}/> About Us</button>
                                 <div className="mt-10 pt-10 border-t border-slate-200 dark:border-white/5"><button onClick={() => { localStorage.clear(); navigate('/'); }} className="w-full flex items-center justify-center gap-3 p-4 rounded-xl bg-rose-500/10 text-rose-500 font-bold uppercase text-xs tracking-widest border border-rose-500/20"><LogOut size={18}/> Logout</button></div>
                             </div>
@@ -308,12 +331,15 @@ const Home = () => {
                 </motion.form>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 mb-20 px-2">
-                    {allSymptoms.map((s, i) => (
+                    {filteredSymptoms.map((s, i) => (
                         <motion.div key={i} whileHover={{ y: -5, scale: 1.02 }} whileTap={{ scale: 0.95 }} onClick={() => toggleSymptom(s)} className={`cursor-pointer p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 shadow-md ${symptomInput.includes(s) ? 'bg-blue-600 border-blue-400 text-white shadow-blue-500/20' : darkMode ? 'bg-white/5 border-white/5 text-slate-500' : 'bg-white border-slate-100 text-slate-400'}`}>
                             <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${symptomInput.includes(s) ? 'bg-white/20' : darkMode ? 'bg-slate-800' : 'bg-slate-100'}`}>{symptomInput.includes(s) ? <Check size={16} className="text-white font-bold"/> : <Activity size={16} className="text-blue-600 opacity-60"/>}</div>
                             <span className="text-[9px] font-black uppercase tracking-tight text-center leading-tight truncate w-full">{s.replace(/_/g, ' ')}</span>
                         </motion.div>
                     ))}
+                    {filteredSymptoms.length === 0 && (
+                        <div className="col-span-full py-10 text-center text-slate-500 uppercase font-black text-xs">No matching symptom found</div>
+                    )}
                 </div>
             </div>
 

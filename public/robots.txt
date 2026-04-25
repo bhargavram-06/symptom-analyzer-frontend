@@ -1,3 +1,13 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Disallow:
+User-agent: *
+Allow: /
+Allow: /home
+Allow: /about
+Disallow: /reset-password/
+Disallow: /verify-otp
+Disallow: /sync-profile
+
+# Link to your sitemap
+Sitemap: https://symptom-analyzerr.netlify.app/sitemap.xml

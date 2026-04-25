@@ -5,16 +5,26 @@
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#020617" />
-    <meta
-      name="description"
-      content="Vital Portal - AI Powered Symptom Analyzer"
-    />
+    
+    <title>Vital Portal | AI-Powered Symptom Analyzer & Health Guide</title>
+    <meta name="title" content="Vital Portal | AI-Powered Symptom Analyzer & Health Guide" />
+    <meta name="description" content="Identify 133+ symptoms instantly with Vital Portal. Our AI health engine provides personalized care tips, nutrition plans, and medication guidance for faster recovery." />
+    <meta name="keywords" content="AI symptom checker, health analyzer, vital portal, medical diagnosis AI, home remedies, health tracking Visakhapatnam" />
+    <meta name="author" content="Vital Portal Team" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vitalportal-ai.netlify.app/" /> <meta property="og:title" content="Vital Portal | Skip the Queue, Start Your Care" />
+    <meta property="og:description" content="AI-driven healthcare companion for instant symptom analysis and professional care recommendations." />
+    <meta property="og:image" content="%PUBLIC_URL%/logo512.png" />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="Vital Portal | AI Health Engine" />
+    <meta property="twitter:description" content="Analyze symptoms and get professional care tips in seconds with Vital Portal AI." />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     
-    <title>Vital Portal | AI Health</title>
-
     <script>
       (function(){
         if(!window.chatbase || window.chatbase("getState") !== "initialized"){
@@ -31,9 +41,30 @@
         }
       })();
     </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Vital Portal",
+      "operatingSystem": "Web",
+      "applicationCategory": "HealthApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR"
+      },
+      "description": "An advanced AI-powered health portal that analyzes 133 unique symptoms to provide instant medical insights, nutrition plans, and localized care recommendations.",
+      "featureList": "Symptom Analysis, Medication Guidance, PDF Report Generation, Cloud Profile Sync, AI Health Chatbot",
+      "author": {
+        "@type": "Organization",
+        "name": "Vital Portal Health"
+      }
+    }
+    </script>
   </head>
-  <body class="bg-[#020617]">
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+  <body class="bg-[#020617] text-white">
+    <noscript>You need to enable JavaScript to run this app for the best experience.</noscript>
     <div id="root"></div>
   </body>
 </html>
