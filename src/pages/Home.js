@@ -225,7 +225,7 @@ const Home = () => {
             <Helmet>
                 <title>Vital Portal | AI Symptom Analyzer & Care Guide</title>
                 <meta name="description" content="Use Vital Portal's AI-driven diagnostic engine to analyze 133 symptoms instantly. Get personalized nutrition plans and professional care recommendations." />
-                <meta name="keywords" content="symptom analyzer, AI health, medical diagnostic tool, health portal, medical records sync" />
+                <meta name="keywords" content="symptom analyzer, AI health, medical diagnostic tool, health portal, medical records sync,Symptoms,medical portal,Quick relief,Vital portal" />
             </Helmet>
 
             {/* --- Blinking Animation Style --- */}
