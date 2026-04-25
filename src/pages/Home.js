@@ -279,11 +279,11 @@ const Home = () => {
 
             <div className="max-w-6xl mx-auto px-4 mt-8">
                 {/* --- BMI CARD --- */}
-                <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="bg-gradient-to-br from-blue-600 to-indigo-900 rounded-[2rem] p-5 md:p-8 mb-10 shadow-xl border border-white/10 relative overflow-hidden text-white max-w-4xl mx-auto">
+                <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="bg-gradient-to-br from-blue-600 to-indigo-900 rounded-[1.5rem] p-3 md:p-6 mb-8 shadow-xl border border-white/10 relative overflow-hidden text-white max-w-sm mx-auto">
                     <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-4">
                         <div className="text-center md:text-left">
                             <p className="text-blue-200 text-[9px] font-black uppercase tracking-widest mb-1">Health Metric</p>
-                            <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter leading-none mb-3">BMI {bmiValue}</h2>
+                            <h2 className="text-2xl md:text-6xl font-black italic tracking-tighter leading-none mb-3">BMI {bmiValue}</h2>
                             <div className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase border shadow-inner inline-block ${bmiValue < 25 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border-rose-500/30'}`}>{bmiValue < 25 ? 'Healthy Weight' : 'Overweight'}</div>
                         </div>
                         <div className="bg-white/10 backdrop-blur-xl px-6 py-4 rounded-2xl border border-white/10 text-center min-w-[120px]">
